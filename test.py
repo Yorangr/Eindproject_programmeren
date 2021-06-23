@@ -12,7 +12,7 @@ class Kaarten:
     # vulling: 0 = empty, 1 = filled, 2 = shaded
     # aantal: 0 = 1, 1 = 2, 2 = 3
     
-    def bestandsnaam(self):
+    def bestandsnaam(self): #bestandsnaam van plaatje dat bij de kaart hoort
         gifje = '._'
         if self.kleur == 0:
             gifje += 'red'
@@ -39,10 +39,12 @@ class Kaarten:
         else:
             gifje += '3'
         gifje += '.gif'
+        return gifje
 
 
 kaart1 = Kaarten(0, 2, 1, 2)
 kaart2 = Kaarten(1, 2, 2, 2)
 kaart3 = Kaarten(2, 0, 1, 1)
 
-print(kaart.vulling)
+print(kaart1.vulling)
+print(kaart1.bestandsnaam())
