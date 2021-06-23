@@ -41,10 +41,19 @@ class Kaarten:
         gifje += '.gif'
         return gifje
 
+    def set(self,other,another):  #checken of het set is     
+        if (self.aantal==other.aantal==another.aantal or self.aantal!=other.aantal!=another.aantal)\
+            and (self.symbool==other.symbool==another.symbool or self.symbool!=other.symbool!=another.symbool)\
+            and (self.kleur==other.kleur==another.kleur or self.kleur!=other.kleur!=another.kleur)\
+            and (self.vulling==other.vulling==another.vulling or self.vulling!=other.vulling!=another.vulling):
+            return True
+        else:
+            return False
 
-kaart1 = Kaarten(0, 2, 1, 2)
-kaart2 = Kaarten(1, 2, 2, 2)
-kaart3 = Kaarten(2, 0, 1, 1)
+kaart1 = Kaarten(2, 2, 0, 0)
+kaart2 = Kaarten(2, 2, 2, 2)
+kaart3 = Kaarten(1, 1, 1, 1)
 
 print(kaart1.vulling)
 print(kaart1.bestandsnaam())
+print(kaart1.set(kaart2,kaart3))
