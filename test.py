@@ -13,7 +13,7 @@ class Kaarten:
     # aantal: 0 = 1, 1 = 2, 2 = 3
     
     def bestandsnaam(self): #bestandsnaam van plaatje dat bij de kaart hoort
-        gifje = ''
+        gifje = '../kaarten/'
         if self.kleur == 0:
             gifje += 'red'
         elif self.kleur == 1:
