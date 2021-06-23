@@ -1,5 +1,5 @@
+from PIL import Image
 #test
-
 class Kaarten:
     def __init__(self, aantal, symbool, kleur, vulling):
         self.aantal = aantal
@@ -13,7 +13,7 @@ class Kaarten:
     # aantal: 0 = 1, 1 = 2, 2 = 3
     
     def bestandsnaam(self): #bestandsnaam van plaatje dat bij de kaart hoort
-        gifje = '._'
+        gifje = ''
         if self.kleur == 0:
             gifje += 'red'
         elif self.kleur == 1:
@@ -39,7 +39,11 @@ class Kaarten:
         else:
             gifje += '3'
         gifje += '.gif'
-        return gifje
+
+        im = Image.open(gifje) 
+        
+
+        return im.show()
 
     def set(self,other,another):  #checken of een kaart een set is met twee andere kaarten    
         if (self.aantal==other.aantal==another.aantal or self.aantal!=other.aantal!=another.aantal)\
@@ -50,7 +54,7 @@ class Kaarten:
         else:
             return False
 
-kaart1 = Kaarten(2, 2, 0, 0)
+kaart1 = Kaarten(0, 0, 0, 0)
 kaart2 = Kaarten(2, 2, 2, 2)
 kaart3 = Kaarten(1, 1, 1, 1)
 
