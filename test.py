@@ -41,7 +41,7 @@ class Kaarten:
         gifje += '.gif'
         return gifje
 
-    def set(self,other,another):  #checken of het set is     
+    def set(self,other,another):  #checken of een kaart een set is met twee andere kaarten    
         if (self.aantal==other.aantal==another.aantal or self.aantal!=other.aantal!=another.aantal)\
             and (self.symbool==other.symbool==another.symbool or self.symbool!=other.symbool!=another.symbool)\
             and (self.kleur==other.kleur==another.kleur or self.kleur!=other.kleur!=another.kleur)\
