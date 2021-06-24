@@ -14,7 +14,7 @@ class Kaarten:
     # aantal: 0 = 1, 1 = 2, 2 = 3
     
     def plaatje(self): #plaatje dat bij de kaart hoort openen
-        gifje = '../kaarten/'
+        gifje = ''
         if self.kleur == 0:
             gifje += 'red'
         elif self.kleur == 1:
@@ -47,13 +47,16 @@ class Kaarten:
         return im.show()
 
     def set(self,other,another):  #checken of een kaart een set is met twee andere kaarten    
-        if (self.aantal==other.aantal==another.aantal or self.aantal!=other.aantal!=another.aantal)\
-            and (self.symbool==other.symbool==another.symbool or self.symbool!=other.symbool!=another.symbool)\
-            and (self.kleur==other.kleur==another.kleur or self.kleur!=other.kleur!=another.kleur)\
-            and (self.vulling==other.vulling==another.vulling or self.vulling!=other.vulling!=another.vulling):
+        if (self.aantal==other.aantal==another.aantal or self.aantal!=other.aantal!=another.aantal!=self.aantal)\
+            and (self.symbool==other.symbool==another.symbool or self.symbool!=other.symbool!=another.symbool!=self.symbool)\
+            and (self.kleur==other.kleur==another.kleur or self.kleur!=other.kleur!=another.kleur!=self.kleur)\
+            and (self.vulling==other.vulling==another.vulling or self.vulling!=other.vulling!=another.vulling!=self.vulling):
             return True
         else:
             return False
+        
+    def __str__(self):
+        return str(self.aantal,self.kleur,self.vulling,self.symbool)
 
 #stapel van alle mogelijke 81 kaarten
 stapel=[]
@@ -65,8 +68,23 @@ for i in range(3):
 
 twaalf_kaarten=random.sample(stapel, 12) #12 random kaarten
 
+def allesets(aantalkaarten):
+    alle_sets=[] #alle mogelijke sets van een stapel van aantal kaarten
+    for i in range(len(aantalkaarten)):
+        for j in range(i+1,len(aantalkaarten)):
+            for k in range(j+1,len(aantalkaarten)):
+                if i!=j!=k!=i:
+                    if aantalkaarten[i].set(aantalkaarten[j],aantalkaarten[k]):
+                        alle_sets.append([i,j,k])
+    return alle_sets
 
-print(twaalf_kaarten)
+print(allesets(twaalf_kaarten))
+
 print(stapel[0].vulling)
-stapel[0].plaatje()
+
+for i in range(len(twaalf_kaarten)):
+    twaalf_kaarten[i].plaatje()
+
+
+
 print(stapel[0].set(stapel[1],stapel[2]))
