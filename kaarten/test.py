@@ -1,4 +1,5 @@
 from PIL import Image
+import random
 #test
 class Kaarten:
     def __init__(self, aantal, symbool, kleur, vulling):
@@ -12,7 +13,7 @@ class Kaarten:
     # vulling: 0 = empty, 1 = filled, 2 = shaded
     # aantal: 0 = 1, 1 = 2, 2 = 3
     
-    def bestandsnaam(self): #bestandsnaam van plaatje dat bij de kaart hoort
+    def plaatje(self): #plaatje dat bij de kaart hoort openen
         gifje = '../kaarten/'
         if self.kleur == 0:
             gifje += 'red'
@@ -54,10 +55,18 @@ class Kaarten:
         else:
             return False
 
-kaart1 = Kaarten(0, 0, 0, 0)
-kaart2 = Kaarten(2, 2, 2, 2)
-kaart3 = Kaarten(1, 1, 1, 1)
+#stapel van alle mogelijke 81 kaarten
+stapel=[]
+for i in range(3):
+    for j in range(3):
+        for k in range(3):
+            for l in range(3):
+                stapel.append(Kaarten(i,j,k,l))
 
-print(kaart1.vulling)
-print(kaart1.bestandsnaam())
-print(kaart1.set(kaart2,kaart3))
+twaalf_kaarten=random.sample(stapel, 12) #12 random kaarten
+
+
+print(twaalf_kaarten)
+print(stapel[0].vulling)
+stapel[0].plaatje()
+print(stapel[0].set(stapel[1],stapel[2]))
