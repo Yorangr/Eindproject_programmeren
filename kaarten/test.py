@@ -1,5 +1,6 @@
 from PIL import Image
 import random
+import pygame
 
 class Kaarten:
     def __init__(self, aantal, symbool, kleur, vulling):
@@ -73,6 +74,11 @@ def stapel():
                     stapel.append(Kaarten(i,j,k,l))
     return stapel
 
+#nieuwe kaart trekken uit stapel
+def nieuwekaart(stapel):
+    nieuw=random.choice(stapel)
+    return nieuw
+
 #random kaarten voor op tafel
 def tafelkaarten(x):
     tafelkaarten=random.sample(stapel, x)
@@ -89,11 +95,15 @@ def allesets(tafelkaarten):
                         alle_sets.append([tafelkaarten[i],tafelkaarten[j],tafelkaarten[k]])
     return alle_sets
 
-#nieuwe kaart trekken uit stapel
-def nieuwekaart(stapel):
-    nieuw=random.choice(stapel)
-    return nieuw
-  
+#één set uit een stapel van aantal kaarten
+def eenset(tafelkaarten):
+    for i in range(len(tafelkaarten)):
+        for j in range(i+1,len(tafelkaarten)):
+            for k in range(j+1,len(tafelkaarten)):
+                if i!=j!=k!=i:
+                    if tafelkaarten[i].set(tafelkaarten[j],tafelkaarten[k]):
+                        return [tafelkaarten[i],tafelkaarten[j],tafelkaarten[k]]
+     
 #test spel: -----------------------
 #----------------------------------
 
@@ -103,3 +113,22 @@ tafelkaarten=tafelkaarten(12)
 print(stapel) 
 print(nieuwekaart(stapel))  
 print(allesets(tafelkaarten))
+print(eenset(tafelkaarten))
+
+#pygame spel:-----------------------
+#------------------------------------
+WIDTH, HEIGHT = 900,500
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+
+def main():
+    
+    run = True
+    while run:
+        for event in pygame.get():
+            if event.type==pygame.QUIT:
+                run=False
+                
+    pygame.quit()
+
+if __name__=='__main__':
+    main()
