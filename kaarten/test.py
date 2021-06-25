@@ -13,7 +13,8 @@ class Kaarten:
     # vulling: 0 = empty, 1 = filled, 2 = shaded
     # aantal: 0 = 1, 1 = 2, 2 = 3
     
-    def plaatje(self): #plaatje dat bij de kaart hoort openen
+#plaatje dat bij de kaart hoort openen   
+    def plaatje(self): 
         gifje = ''
         if self.kleur == 0:
             gifje += 'red'
@@ -45,8 +46,9 @@ class Kaarten:
         
 
         return im.show()
-
-    def set(self,other,another):  #checken of een kaart een set is met twee andere kaarten    
+    
+#checken of een kaart een set is met twee andere kaarten
+    def set(self,other,another):  
         if (self.aantal==other.aantal==another.aantal or self.aantal!=other.aantal!=another.aantal!=self.aantal)\
             and (self.symbool==other.symbool==another.symbool or self.symbool!=other.symbool!=another.symbool!=self.symbool)\
             and (self.kleur==other.kleur==another.kleur or self.kleur!=other.kleur!=another.kleur!=self.kleur)\
@@ -62,39 +64,42 @@ class Kaarten:
         return str((self.aantal,self.symbool,self.kleur,self.vulling))
 
 #stapel van alle mogelijke 81 kaarten
-stapel=[]
-for i in range(3):
-    for j in range(3):
-        for k in range(3):
-            for l in range(3):
-                stapel.append(Kaarten(i,j,k,l))
+def stapel():
+    stapel=[]
+    for i in range(3):
+        for j in range(3):
+            for k in range(3):
+                for l in range(3):
+                    stapel.append(Kaarten(i,j,k,l))
+    return stapel
 
-#12 random kaarten
-twaalf_kaarten=random.sample(stapel, 12)
-print(twaalf_kaarten)
+#random kaarten voor op tafel
+def tafelkaarten(x):
+    tafelkaarten=random.sample(stapel, x)
+    return tafelkaarten
 
 #alle mogelijke sets van een stapel van aantal kaarten
-def allesets(aantalkaarten):
+def allesets(tafelkaarten):
     alle_sets=[] 
-    for i in range(len(aantalkaarten)):
-        for j in range(i+1,len(aantalkaarten)):
-            for k in range(j+1,len(aantalkaarten)):
+    for i in range(len(tafelkaarten)):
+        for j in range(i+1,len(tafelkaarten)):
+            for k in range(j+1,len(tafelkaarten)):
                 if i!=j!=k!=i:
-                    if aantalkaarten[i].set(aantalkaarten[j],aantalkaarten[k]):
-                        alle_sets.append([aantalkaarten[i],aantalkaarten[j],aantalkaarten[k]])
+                    if tafelkaarten[i].set(tafelkaarten[j],tafelkaarten[k]):
+                        alle_sets.append([tafelkaarten[i],tafelkaarten[j],tafelkaarten[k]])
     return alle_sets
 
 #nieuwe kaart trekken uit stapel
 def nieuwekaart(stapel):
     nieuw=random.choice(stapel)
-    while nieuw in twaalf_kaarten:
-        nieuw=random.choice(stapel)
     return nieuw
   
+#test spel: -----------------------
+#----------------------------------
+
+stapel=stapel()
+tafelkaarten=tafelkaarten(12)
+
+print(stapel) 
 print(nieuwekaart(stapel))  
-
-print(allesets(twaalf_kaarten))
-
-print(stapel[0].vulling)
-
-print(stapel[0].set(stapel[1],stapel[2]))
+print(allesets(tafelkaarten))
