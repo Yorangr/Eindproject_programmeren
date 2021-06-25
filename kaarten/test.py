@@ -1,6 +1,6 @@
 from PIL import Image
 import random
-#test
+
 class Kaarten:
     def __init__(self, aantal, symbool, kleur, vulling):
         self.aantal = aantal
@@ -56,7 +56,10 @@ class Kaarten:
             return False
         
     def __str__(self):
-        return str(self.aantal,self.kleur,self.vulling,self.symbool)
+        return str((self.aantal,self.symbool,self.kleur,self.vulling))
+    
+    def __repr__(self):
+        return str((self.aantal,self.symbool,self.kleur,self.vulling))
 
 #stapel van alle mogelijke 81 kaarten
 stapel=[]
@@ -66,25 +69,32 @@ for i in range(3):
             for l in range(3):
                 stapel.append(Kaarten(i,j,k,l))
 
-twaalf_kaarten=random.sample(stapel, 12) #12 random kaarten
+#12 random kaarten
+twaalf_kaarten=random.sample(stapel, 12)
+print(twaalf_kaarten)
 
+#alle mogelijke sets van een stapel van aantal kaarten
 def allesets(aantalkaarten):
-    alle_sets=[] #alle mogelijke sets van een stapel van aantal kaarten
+    alle_sets=[] 
     for i in range(len(aantalkaarten)):
         for j in range(i+1,len(aantalkaarten)):
             for k in range(j+1,len(aantalkaarten)):
                 if i!=j!=k!=i:
                     if aantalkaarten[i].set(aantalkaarten[j],aantalkaarten[k]):
-                        alle_sets.append([i,j,k])
+                        alle_sets.append([aantalkaarten[i],aantalkaarten[j],aantalkaarten[k]])
     return alle_sets
+
+#nieuwe kaart trekken uit stapel
+def nieuwekaart(stapel):
+    nieuw=random.choice(stapel)
+    while nieuw in twaalf_kaarten:
+        nieuw=random.choice(stapel)
+    return nieuw
+  
+print(nieuwekaart(stapel))  
 
 print(allesets(twaalf_kaarten))
 
 print(stapel[0].vulling)
-
-for i in range(len(twaalf_kaarten)):
-    twaalf_kaarten[i].plaatje()
-
-
 
 print(stapel[0].set(stapel[1],stapel[2]))
