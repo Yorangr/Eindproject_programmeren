@@ -1,5 +1,6 @@
 from PIL import Image
 import random
+import sys
 import pygame
 
 class Kaarten:
@@ -14,7 +15,7 @@ class Kaarten:
     # vulling: 0 = empty, 1 = filled, 2 = shaded
     # aantal: 0 = 1, 1 = 2, 2 = 3
     
-#plaatje dat bij de kaart hoort openen   
+#plaatje dat bij de kaart hoort 
     def plaatje(self): 
         gifje = ''
         if self.kleur == 0:
@@ -43,10 +44,7 @@ class Kaarten:
             gifje += '3'
         gifje += '.gif'
 
-        im = Image.open(gifje) 
-        
-
-        return im.show()
+        return gifje
     
 #checken of een kaart een set is met twee andere kaarten
     def set(self,other,another):  
@@ -114,20 +112,38 @@ print(stapel)
 print(nieuwekaart(stapel))  
 print(allesets(tafelkaarten))
 print(eenset(tafelkaarten))
+print(nieuwekaart(stapel).plaatje())
+
 
 #pygame spel:-----------------------
 #------------------------------------
+
 WIDTH, HEIGHT = 900,500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('set')
+
+POKERGREEN=(0,153,0)
+
+FPS=60
+nieuwekaart=nieuwekaart(stapel).plaatje()
+plaatje=pygame.image.load(nieuwekaart)
+def draw_window():
+    WIN.fill(POKERGREEN)
+    pygame.display.update()
 
 def main():
-    
+    clock=pygame.time.Clock()
     run = True
     while run:
-        for event in pygame.get():
+        clock.tick(FPS)
+        WIN.blit(plaatje, (0, 0))
+        for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 run=False
                 
+        draw_window()
+       
+        
     pygame.quit()
 
 if __name__=='__main__':
