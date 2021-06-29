@@ -1,7 +1,6 @@
-from PIL import Image
 import random
-import sys
 import pygame
+
 
 class Kaarten:
     def __init__(self, aantal, symbool, kleur, vulling):
@@ -77,7 +76,7 @@ def nieuwekaart(stapel):
     nieuw=random.choice(stapel)
     return nieuw
 
-#random kaarten voor op tafel
+#x random kaarten voor op tafel
 def tafelkaarten(x):
     tafelkaarten=random.sample(stapel, x)
     return tafelkaarten
@@ -118,31 +117,68 @@ print(nieuwekaart(stapel).plaatje())
 #pygame spel:-----------------------
 #------------------------------------
 
-WIDTH, HEIGHT = 900,500
+WIDTH, HEIGHT = 850,500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('set')
 
 POKERGREEN=(0,153,0)
 
 FPS=60
-nieuwekaart=nieuwekaart(stapel).plaatje()
-plaatje=pygame.image.load(nieuwekaart)
+
+pygame.font.init()
+myfont = pygame.font.SysFont('Comic Sans MS', 30)
+
+nummers=[]
+for i in range(1,13):
+    nummers.append(myfont.render(str(i), False, (255, 255, 255)))
+
+plaatjes=[]
+for i in range(len(tafelkaarten)):
+    plaatjes.append(pygame.image.load(tafelkaarten[i].plaatje()))
+
+# nieuwekaart=nieuwekaart(stapel).plaatje()
+# plaatje=pygame.image.load(nieuwekaart)
 def draw_window():
     WIN.fill(POKERGREEN)
+
+    WIN.blit(plaatjes[0], (10, 10))
+    WIN.blit(plaatjes[1], (150,10))
+    WIN.blit(plaatjes[2], (290,10))
+    WIN.blit(plaatjes[3], (430,10))
+    WIN.blit(plaatjes[4], (570,10))
+    WIN.blit(plaatjes[5], (710,10))
+    WIN.blit(plaatjes[6], (10,250))
+    WIN.blit(plaatjes[7], (150,250))
+    WIN.blit(plaatjes[8], (290, 250))
+    WIN.blit(plaatjes[9], (430,250))
+    WIN.blit(plaatjes[10], (570,250))
+    WIN.blit(plaatjes[11], (710,250))
+    
+    WIN.blit(nummers[0],(50,205))
+    WIN.blit(nummers[1],(190,205))
+    WIN.blit(nummers[2],(330,205))
+    WIN.blit(nummers[3],(470,205))
+    WIN.blit(nummers[4],(610,205))
+    WIN.blit(nummers[5],(750,205))
+    WIN.blit(nummers[6],(50,450))
+    WIN.blit(nummers[7],(190,450))
+    WIN.blit(nummers[8],(330,450))
+    WIN.blit(nummers[9],(470,450))
+    WIN.blit(nummers[10],(610,450))
+    WIN.blit(nummers[11],(750,450))
     pygame.display.update()
+
 
 def main():
     clock=pygame.time.Clock()
     run = True
     while run:
         clock.tick(FPS)
-        WIN.blit(plaatje, (0, 0))
-        for event in pygame.event.get():
+        for event in pygame.event.get():          
             if event.type==pygame.QUIT:
                 run=False
                 
         draw_window()
-       
         
     pygame.quit()
 
