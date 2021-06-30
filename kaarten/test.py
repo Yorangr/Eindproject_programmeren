@@ -118,7 +118,7 @@ print(nieuwekaart(stapel).plaatje())
 #pygame spel:-----------------------
 #------------------------------------
 
-WIDTH, HEIGHT = 1000,500
+WIDTH, HEIGHT = 1200,500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('set')
 
@@ -137,6 +137,7 @@ color=pygame.Color('gray13')
 
 
 
+
 nummers=[]
 for i in range(1,13):
     nummers.append(myfont.render(str(i), False, (255, 255, 255)))
@@ -145,9 +146,12 @@ plaatjes=[]
 for i in range(len(tafelkaarten)):
     plaatjes.append(pygame.image.load(tafelkaarten[i].plaatje()))
 
-def draw_window(text_surface):
+def draw_window(text_surface,invoer,submit):
     WIN.fill(POKERGREEN)
     
+    if submit:
+        if tafelkaarten[int(invoer[0])-1].set(tafelkaarten[int(invoer[1])-1],tafelkaarten[int(invoer[2])-1]):
+            WIN.blit(myfont.render('Goed gedaan, dat is een set!',False,(255,255,255)),(810,200))
     
     pygame.draw.rect(WIN,color,input_rect,2)
     WIN.blit(text_surface,(input_rect.x+5,input_rect.y-5))
@@ -182,6 +186,8 @@ def draw_window(text_surface):
 
 
 def main(user_text):
+    invoer=''
+    submit=False
     clock=pygame.time.Clock()
     run = True
     while run:
@@ -196,13 +202,14 @@ def main(user_text):
                 if event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                 elif event.key == pygame.K_RETURN:
-                    invoer=user_text #save user_text as invoer
+                    submit=True
+                    invoer=user_text.split(',') #save user_text as invoer
                     user_text = ""
                 else:
                     user_text+=event.unicode
             ##
         text_surface=myfont.render(user_text,True,(255,255,255))    
-        draw_window(text_surface)
+        draw_window(text_surface,invoer,submit)
         
     
     done = False
