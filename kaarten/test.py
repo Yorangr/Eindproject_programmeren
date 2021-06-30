@@ -131,7 +131,7 @@ pygame.font.init()
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 extrafont = pygame.font.SysFont('Comic Sans MS', 17)
 
-input_rect=pygame.Rect(820,75,140,32)
+input_rect=pygame.Rect(820,90,140,32)
 color=(255,255,255)
 
 
@@ -145,9 +145,11 @@ for i in range(1,13):
 # for i in range(len(tafelkaarten)):
 #     plaatjes.append(pygame.image.load(tafelkaarten[i].plaatje()))
 
-def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info,tijd,kopietijd,moeilijkheid,computer):
+def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info,tijd,kopietijd,moeilijkheid,computer,maximum):
     WIN.fill(POKERGREEN)
     WIN.blit(extrafont.render('(c) 2021 Tarik Tekeli en Yoran Grovenstein', False, (255,255,255)),(905,475))
+    if moeilijkheid:
+        WIN.blit(extrafont.render('De eerste die '+str(maximum)+' punten heeft wint!', False, (255,255,255)),(820,400))
     
     
     if submit:
@@ -174,7 +176,8 @@ def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,c
     WIN.blit(myfont.render('Computer score: '+str(compunten),False,(255,255,255)),(820,350))
     
     if not moeilijkheid:
-        WIN.blit(myfont.render('Voer hier de gewenste tijd in:',False,(255,255,255)),(820,10))
+        WIN.blit(myfont.render('Voer hier de gewenste tijd en',False,(255,255,255)),(820,10))
+        WIN.blit(myfont.render('maximum aantal punten in:',False,(255,255,255)),(820,42))
     else:
         WIN.blit(myfont.render('Voer hier een set in:',False,(255,255,255)),(820,10))
     pygame.draw.rect(WIN,color,input_rect,2)
@@ -237,6 +240,7 @@ def main():
     tijd=0
     eerstekeer=False
     computer=False
+    maximum=10^6
     ##########
     
     counter, text = tijd, str(tijd).rjust(3)
@@ -248,17 +252,18 @@ def main():
     while run:
         clock.tick(FPS)
         for event in pygame.event.get():
-            if punten>=10 or compunten>=10:
+            if punten>=maximum or compunten>=maximum:
                 moeilijkheid=False
                 eerstekeer=False
                 tijd=0
                 counter, text = tijd, str(tijd).rjust(3)
-                if punten>=10:
+                if punten>=maximum:
                     info='Je hebt gewonnen!'
                 else:
                     info='De computer heeft gewonnen'
                 punten=0
                 compunten=0
+                maximum=10^6
             if event.type==pygame.QUIT:
                 run=False
             ##    
@@ -269,8 +274,9 @@ def main():
                     user_text = user_text[:-1]
                 elif event.key == pygame.K_RETURN:
                     if not moeilijkheid:
-                        
-                        tijd = int(user_text)
+                        invoer=user_text.split(',')
+                        tijd = int(invoer[0])
+                        maximum=int(invoer[1])
                         moeilijkheid=True
                     
                     else:
@@ -292,6 +298,7 @@ def main():
                     user_text = ""
                 else:
                     user_text+=event.unicode
+                   
                 ######
             if event.type == pygame.USEREVENT and moeilijkheid: 
                 counter -= 1
@@ -300,9 +307,11 @@ def main():
                 else:                   
                     counter, text = tijd, str(tijd).rjust(3)
                     if allesets(tafelkaarten)==[]:
-                        info = 'Er waren geen sets'
-                        for i in range(3):
-                            tafelkaarten[i]=nieuwekaart(stapel,tafelkaarten)
+                        if eerstekeer:
+                            info = 'Er waren geen sets'
+                            for i in range(3):
+                                tafelkaarten[i]=nieuwekaart(stapel,tafelkaarten)
+                        eerstekeer=True
                     else:
                         if eerstekeer:
                             info= 'Je was te langzaam'
@@ -318,7 +327,7 @@ def main():
                 #text = str(counter).rjust(3) if counter > 0 else 'Je bent te langzaam'
                 #######
         text_surface=myfont.render(user_text,True,(255,255,255))    
-        draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info,tijd,kopietijd,moeilijkheid,computer)
+        draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info,tijd,kopietijd,moeilijkheid,computer,maximum)
         
     
     done = False
