@@ -73,8 +73,10 @@ def stapel():
     return stapel
 
 #nieuwe kaart trekken uit stapel
-def nieuwekaart(stapel):
-    nieuw=random.choice(stapel)
+def nieuwekaart(stapel,tafelkaarten):
+    nieuw=tafelkaarten[0]
+    while nieuw in tafelkaarten:
+        nieuw=random.choice(stapel)
     return nieuw
 
 #x random kaarten voor op tafel
@@ -108,17 +110,12 @@ def eenset(tafelkaarten):
 stapel=stapel()
 tafelkaarten=tafelkaarten(12)
 
-print(stapel) 
-print(nieuwekaart(stapel))  
-print(allesets(tafelkaarten))
-print(eenset(tafelkaarten))
-print(nieuwekaart(stapel).plaatje())
 
 
 #pygame spel:-----------------------
 #------------------------------------
-
-WIDTH, HEIGHT = 1200,500
+pygame.init()
+WIDTH, HEIGHT = 1250,500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('set')
 
@@ -133,7 +130,7 @@ myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 user_text=''
 input_rect=pygame.Rect(820,100,140,32)
-color=pygame.Color('gray13')
+color=(255,255,255)
 
 
 
@@ -146,16 +143,27 @@ for i in range(1,13):
 # for i in range(len(tafelkaarten)):
 #     plaatjes.append(pygame.image.load(tafelkaarten[i].plaatje()))
 
-def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3):
+def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info):
     WIN.fill(POKERGREEN)
     
     if submit:
+        
         if kaart1.set(kaart2,kaart3):
-            WIN.blit(myfont.render('Goed gedaan, dat is een set!',False,(255,255,255)),(810,200))        
+            info = 'Goed gedaan, dat is een set!'
+            #WIN.blit(myfont.render('Goed gedaan, dat is een set!',False,(255,255,255)),(810,200))
         else:
-            WIN.blit(myfont.render('Helaas, dat is geen set',False,(255,255,255)),(810,200))
+            info ='Helaas, dat is geen set'
+            #WIN.blit(myfont.render('Helaas, dat is geen set',False,(255,255,255)),(810,200))
     
-    WIN.blit(myfont.render('Voer hier een set in:',False,(255,255,255)),((820,10)))
+    ########
+    WIN.blit(myfont.render(text, True, (255, 255, 255)), (800, 250))
+    WIN.blit(myfont.render(info, False, (255, 255, 255)), (860, 250))
+    ###########
+    
+    WIN.blit(myfont.render('Jouw score: '+str(punten),False,(255,255,255)),(820,300))
+    WIN.blit(myfont.render('Computer score: '+str(compunten),False,(255,255,255)),(820,330))
+    
+    WIN.blit(myfont.render('Voer hier een set in:',False,(255,255,255)),(820,10))
     
     pygame.draw.rect(WIN,color,input_rect,2)
     WIN.blit(text_surface,(input_rect.x+5,input_rect.y-5))
@@ -200,6 +208,14 @@ def main(user_text):
     kaart1=''
     kaart2=''
     kaart3=''
+    punten=0
+    compunten=0
+    info=''
+    
+    ##########
+    counter, text = 3, '3'.rjust(3)
+    pygame.time.set_timer(pygame.USEREVENT, 1000)
+    ############
     
     clock=pygame.time.Clock()
     run = True
@@ -218,19 +234,39 @@ def main(user_text):
                     submit=True
                     
                     invoer=user_text.split(',') #save user_text as invoer
+                    
+                    
+                       
                     kaart1=tafelkaarten[int(invoer[0])-1]
                     kaart2=tafelkaarten[int(invoer[1])-1]
                     kaart3=tafelkaarten[int(invoer[2])-1]
+                    
                     if tafelkaarten[int(invoer[0])-1].set(tafelkaarten[int(invoer[1])-1],tafelkaarten[int(invoer[2])-1]):
-                        tafelkaarten[int(invoer[0])-1]=nieuwekaart(stapel)
-                        tafelkaarten[int(invoer[1])-1]=nieuwekaart(stapel)
-                        tafelkaarten[int(invoer[2])-1]=nieuwekaart(stapel)
+                        
+                        tafelkaarten[int(invoer[0])-1]=nieuwekaart(stapel,tafelkaarten)                        
+                        tafelkaarten[int(invoer[1])-1]=nieuwekaart(stapel,tafelkaarten)
+                        tafelkaarten[int(invoer[2])-1]=nieuwekaart(stapel,tafelkaarten)
+                        punten+=1    
                     user_text = ""
                 else:
                     user_text+=event.unicode
-            ##
+                ######
+            if event.type == pygame.USEREVENT: 
+                counter -= 1
+                if counter >= 0:
+                    text = str(counter).rjust(3)
+                else:                   
+                    counter, text = 3, '3'.rjust(3)
+                    if allesets(tafelkaarten)==[]:
+                        info = 'Er waren geen sets'
+                        
+                    else:
+                        info= 'Je was te langzaam'                       
+                        compunten+=1
+                #text = str(counter).rjust(3) if counter > 0 else 'Je bent te langzaam'
+                #######
         text_surface=myfont.render(user_text,True,(255,255,255))    
-        draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3)
+        draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info)
         
     
     done = False
