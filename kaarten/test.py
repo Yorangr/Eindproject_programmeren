@@ -47,8 +47,10 @@ class Kaarten:
         return gifje
     
 #checken of een kaart een set is met twee andere kaarten
-    def set(self,other,another):  
-        if (self.aantal==other.aantal==another.aantal or self.aantal!=other.aantal!=another.aantal!=self.aantal)\
+    def set(self,other,another):
+        if self==other or self == another or other == another:
+            return False
+        elif (self.aantal==other.aantal==another.aantal or self.aantal!=other.aantal!=another.aantal!=self.aantal)\
             and (self.symbool==other.symbool==another.symbool or self.symbool!=other.symbool!=another.symbool!=self.symbool)\
             and (self.kleur==other.kleur==another.kleur or self.kleur!=other.kleur!=another.kleur!=self.kleur)\
             and (self.vulling==other.vulling==another.vulling or self.vulling!=other.vulling!=another.vulling!=self.vulling):
@@ -143,29 +145,35 @@ for i in range(1,13):
 # for i in range(len(tafelkaarten)):
 #     plaatjes.append(pygame.image.load(tafelkaarten[i].plaatje()))
 
-def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info):
+def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info,tijd,kopietijd,moeilijkheid,computer):
     WIN.fill(POKERGREEN)
     
     if punten <10 and compunten <10:
         if submit:
             
-            if kaart1.set(kaart2,kaart3):
+            if kaart1.set(kaart2,kaart3) and int(kopietijd)!=0 and not computer:
                 info = 'Goed gedaan, dat is een set!'
                 #WIN.blit(myfont.render('Goed gedaan, dat is een set!',False,(255,255,255)),(810,200))
-            else:
+            elif not computer:
                 info ='Helaas, dat is geen set'
                 #WIN.blit(myfont.render('Helaas, dat is geen set',False,(255,255,255)),(810,200))
         
         ########
         WIN.blit(myfont.render('Timer: '+text, True, (255, 255, 255)), (820, 200))
-        WIN.blit(myfont.render(info, False, (255, 255, 255)), (820, 250))
+        
+        if info =='Helaas, dat is geen set' and int(text)>int(kopietijd)*0.75:
+            WIN.blit(myfont.render(info, False, (255, 255, 255)), (820, 250))
+        elif int(text)>tijd*0.75:
+            WIN.blit(myfont.render(info, False, (255, 255, 255)), (820, 250))
         ###########
         
         WIN.blit(myfont.render('Jouw score: '+str(punten),False,(255,255,255)),(820,300))
         WIN.blit(myfont.render('Computer score: '+str(compunten),False,(255,255,255)),(820,350))
         
-        WIN.blit(myfont.render('Voer hier een set in:',False,(255,255,255)),(820,10))
-        
+        if not moeilijkheid:
+            WIN.blit(myfont.render('Voer hier een moeilijkheid in:',False,(255,255,255)),(820,10))
+        else:
+            WIN.blit(myfont.render('Voer hier een set in:',False,(255,255,255)),(820,10))
         pygame.draw.rect(WIN,color,input_rect,2)
         WIN.blit(text_surface,(input_rect.x+5,input_rect.y-5))
         input_rect.w=max(100,text_surface.get_width()+10)
@@ -207,9 +215,11 @@ def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,c
             winnaar= 'De computer heeft gewonnen'
         WIN.blit(myfont.render(winnaar,False,(255,255,255)),(400,200))
     pygame.display.update()
+    
 
-
+  
 def main():
+    moeilijkheid=False
     user_text=''
     invoer=''
     submit=False
@@ -220,9 +230,12 @@ def main():
     punten=0
     compunten=0
     info=''
-    
+    kopietijd=0
+    tijd=0
+    eerstekeer=False
+    computer=False
     ##########
-    tijd=3
+    
     counter, text = tijd, str(tijd).rjust(3)
     pygame.time.set_timer(pygame.USEREVENT, 1000)
     ############
@@ -241,25 +254,32 @@ def main():
                 if event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                 elif event.key == pygame.K_RETURN:
-                    submit=True
+                    if not moeilijkheid:
+                        
+                        tijd = int(user_text)
+                        moeilijkheid=True
                     
-                    invoer=user_text.split(',') #save user_text as invoer
-                    
-                    
-                       
-                    kaart1=tafelkaarten[int(invoer[0])-1]
-                    kaart2=tafelkaarten[int(invoer[1])-1]
-                    kaart3=tafelkaarten[int(invoer[2])-1]
-                    
-                    if tafelkaarten[int(invoer[0])-1].set(tafelkaarten[int(invoer[1])-1],tafelkaarten[int(invoer[2])-1]):
-                        for i in range(3):
-                            tafelkaarten[int(invoer[i])-1]=nieuwekaart(stapel,tafelkaarten)                        
-                        punten+=1    
+                    else:
+                        submit=True
+                        computer=False
+                        invoer=user_text.split(',') #save user_text as invoer
+                        
+                        kopietijd=text
+                           
+                        kaart1=tafelkaarten[int(invoer[0])-1]
+                        kaart2=tafelkaarten[int(invoer[1])-1]
+                        kaart3=tafelkaarten[int(invoer[2])-1]
+                        
+                        if tafelkaarten[int(invoer[0])-1].set(tafelkaarten[int(invoer[1])-1],tafelkaarten[int(invoer[2])-1]):
+                            for i in range(3):
+                                tafelkaarten[int(invoer[i])-1]=nieuwekaart(stapel,tafelkaarten)                        
+                            punten+=1
+                            counter, text = tijd, str(tijd).rjust(3)
                     user_text = ""
                 else:
                     user_text+=event.unicode
                 ######
-            if event.type == pygame.USEREVENT: 
+            if event.type == pygame.USEREVENT and moeilijkheid: 
                 counter -= 1
                 if counter >= 0:
                     text = str(counter).rjust(3)
@@ -270,16 +290,21 @@ def main():
                         for i in range(3):
                             tafelkaarten[i]=nieuwekaart(stapel,tafelkaarten)
                     else:
-                        info= 'Je was te langzaam'                       
-                        compunten+=1
-                        comset=eenset(tafelkaarten)
-                        for i in range(3):                           
-                            tafelkaarten[tafelkaarten.index(comset[i])]=nieuwekaart(stapel,tafelkaarten)
+                        if eerstekeer:
+                            info= 'Je was te langzaam'
+                        
+                            compunten+=1
+                        
+                            comset=eenset(tafelkaarten)
+                            for i in range(3):                           
+                                tafelkaarten[tafelkaarten.index(comset[i])]=nieuwekaart(stapel,tafelkaarten)
+                            computer=True
+                        eerstekeer=True
                         
                 #text = str(counter).rjust(3) if counter > 0 else 'Je bent te langzaam'
                 #######
         text_surface=myfont.render(user_text,True,(255,255,255))    
-        draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info)
+        draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info,tijd,kopietijd,moeilijkheid,computer)
         
     
     done = False
