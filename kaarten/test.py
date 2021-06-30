@@ -213,7 +213,7 @@ def main(user_text):
     info=''
     
     ##########
-    counter, text = 3, '3'.rjust(3)
+    counter, text = 15, '15'.rjust(3)
     pygame.time.set_timer(pygame.USEREVENT, 1000)
     ############
     
@@ -256,7 +256,7 @@ def main(user_text):
                 if counter >= 0:
                     text = str(counter).rjust(3)
                 else:                   
-                    counter, text = 3, '3'.rjust(3)
+                    counter, text = 15, '15'.rjust(3)
                     if allesets(tafelkaarten)==[]:
                         info = 'Er waren geen sets'
                         
