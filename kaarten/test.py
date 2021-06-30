@@ -129,9 +129,9 @@ FPS=60
 
 pygame.font.init()
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
+extrafont = pygame.font.SysFont('Comic Sans MS', 17)
 
-
-input_rect=pygame.Rect(820,100,140,32)
+input_rect=pygame.Rect(820,75,140,32)
 color=(255,255,255)
 
 
@@ -147,6 +147,7 @@ for i in range(1,13):
 
 def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info,tijd,kopietijd,moeilijkheid,computer):
     WIN.fill(POKERGREEN)
+    WIN.blit(extrafont.render('(c) 2021 Tarik Tekeli en Yoran Grovenstein', False, (255,255,255)),(905,475))
     
     if punten <10 and compunten <10:
         if submit:
@@ -171,7 +172,7 @@ def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,c
         WIN.blit(myfont.render('Computer score: '+str(compunten),False,(255,255,255)),(820,350))
         
         if not moeilijkheid:
-            WIN.blit(myfont.render('Voer hier een moeilijkheid in:',False,(255,255,255)),(820,10))
+            WIN.blit(myfont.render('Voer hier de gewenste tijd in:',False,(255,255,255)),(820,10))
         else:
             WIN.blit(myfont.render('Voer hier een set in:',False,(255,255,255)),(820,10))
         pygame.draw.rect(WIN,color,input_rect,2)
