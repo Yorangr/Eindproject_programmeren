@@ -249,8 +249,6 @@ def main():
         clock.tick(FPS)
         for event in pygame.event.get():
             if punten>=10 or compunten>=10:
-                punten=0
-                compunten=0
                 moeilijkheid=False
                 eerstekeer=False
                 tijd=0
@@ -259,6 +257,8 @@ def main():
                     info='Je hebt gewonnen!'
                 else:
                     info='De computer heeft gewonnen'
+                punten=0
+                compunten=0
             if event.type==pygame.QUIT:
                 run=False
             ##    
