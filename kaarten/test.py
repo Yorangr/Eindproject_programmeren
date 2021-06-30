@@ -132,7 +132,7 @@ pygame.font.init()
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 user_text=''
-input_rect=pygame.Rect(820,10,140,32)
+input_rect=pygame.Rect(820,100,140,32)
 color=pygame.Color('gray13')
 
 
@@ -142,21 +142,29 @@ nummers=[]
 for i in range(1,13):
     nummers.append(myfont.render(str(i), False, (255, 255, 255)))
 
-plaatjes=[]
-for i in range(len(tafelkaarten)):
-    plaatjes.append(pygame.image.load(tafelkaarten[i].plaatje()))
+# plaatjes=[]
+# for i in range(len(tafelkaarten)):
+#     plaatjes.append(pygame.image.load(tafelkaarten[i].plaatje()))
 
-def draw_window(text_surface,invoer,submit):
+def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3):
     WIN.fill(POKERGREEN)
     
     if submit:
-        if tafelkaarten[int(invoer[0])-1].set(tafelkaarten[int(invoer[1])-1],tafelkaarten[int(invoer[2])-1]):
-            WIN.blit(myfont.render('Goed gedaan, dat is een set!',False,(255,255,255)),(810,200))
+        if kaart1.set(kaart2,kaart3):
+            WIN.blit(myfont.render('Goed gedaan, dat is een set!',False,(255,255,255)),(810,200))        
+        else:
+            WIN.blit(myfont.render('Helaas, dat is geen set',False,(255,255,255)),(810,200))
+    
+    WIN.blit(myfont.render('Voer hier een set in:',False,(255,255,255)),((820,10)))
     
     pygame.draw.rect(WIN,color,input_rect,2)
     WIN.blit(text_surface,(input_rect.x+5,input_rect.y-5))
     input_rect.w=max(100,text_surface.get_width()+10)
-
+    
+    plaatjes=[]
+    for i in range(len(tafelkaarten)):
+        plaatjes.append(pygame.image.load(tafelkaarten[i].plaatje()))
+    
     WIN.blit(plaatjes[0], (10, 10))
     WIN.blit(plaatjes[1], (150,10))
     WIN.blit(plaatjes[2], (290,10))
@@ -188,6 +196,11 @@ def draw_window(text_surface,invoer,submit):
 def main(user_text):
     invoer=''
     submit=False
+    correct=False
+    kaart1=''
+    kaart2=''
+    kaart3=''
+    
     clock=pygame.time.Clock()
     run = True
     while run:
@@ -203,13 +216,21 @@ def main(user_text):
                     user_text = user_text[:-1]
                 elif event.key == pygame.K_RETURN:
                     submit=True
+                    
                     invoer=user_text.split(',') #save user_text as invoer
+                    kaart1=tafelkaarten[int(invoer[0])-1]
+                    kaart2=tafelkaarten[int(invoer[1])-1]
+                    kaart3=tafelkaarten[int(invoer[2])-1]
+                    if tafelkaarten[int(invoer[0])-1].set(tafelkaarten[int(invoer[1])-1],tafelkaarten[int(invoer[2])-1]):
+                        tafelkaarten[int(invoer[0])-1]=nieuwekaart(stapel)
+                        tafelkaarten[int(invoer[1])-1]=nieuwekaart(stapel)
+                        tafelkaarten[int(invoer[2])-1]=nieuwekaart(stapel)
                     user_text = ""
                 else:
                     user_text+=event.unicode
             ##
         text_surface=myfont.render(user_text,True,(255,255,255))    
-        draw_window(text_surface,invoer,submit)
+        draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3)
         
     
     done = False
