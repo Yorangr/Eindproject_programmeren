@@ -15,7 +15,7 @@ class Kaarten:
     # vulling: 0 = empty, 1 = filled, 2 = shaded
     # aantal: 0 = 1, 1 = 2, 2 = 3
     
-#plaatje dat bij de kaart hoort 
+#bestandsnaam dat bij kaart hoort genereren
     def plaatje(self): 
         gifje = ''
         if self.kleur == 0:
@@ -106,8 +106,7 @@ def eenset(tafelkaarten):
                     if tafelkaarten[i].set(tafelkaarten[j],tafelkaarten[k]):
                         return [tafelkaarten[i],tafelkaarten[j],tafelkaarten[k]]
      
-#test spel: -----------------------
-#----------------------------------
+
 
 stapel=stapel()
 tafelkaarten=tafelkaarten(12)
@@ -122,29 +121,29 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('set')
 
 
-
+#kleur van achtergrond
 POKERGREEN=(0,153,0)
-
+#frames per second van spel
 FPS=60
 
+#lettertypes
 pygame.font.init()
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 extrafont = pygame.font.SysFont('Comic Sans MS', 17)
 
+#rechthoek voor tekstvakje
 input_rect=pygame.Rect(820,90,140,32)
 color=(255,255,255)
 
 
 
-
+#getallen voor onder de kaarten
 nummers=[]
 for i in range(1,13):
     nummers.append(myfont.render(str(i), False, (255, 255, 255)))
 
-# plaatjes=[]
-# for i in range(len(tafelkaarten)):
-#     plaatjes.append(pygame.image.load(tafelkaarten[i].plaatje()))
 
+#functie voor het 'tekenen' van alle dingen die nodig zijn voor het spel
 def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info,tijd,kopietijd,moeilijkheid,computer,maximum):
     WIN.fill(POKERGREEN)
     WIN.blit(extrafont.render('(c) 2021 Tarik Tekeli en Yoran Grovenstein', False, (255,255,255)),(905,475))
@@ -154,16 +153,7 @@ def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,c
         else:
             WIN.blit(extrafont.render('De eerste die '+str(maximum)+' punten heeft wint!', False, (255,255,255)),(820,400))
     
-    # if submit:
-        
-    #     if kaart1.set(kaart2,kaart3) and int(kopietijd)!=0 and not computer and moeilijkheid:
-    #         info = 'Goed gedaan, dat is een set!'
-    #         #WIN.blit(myfont.render('Goed gedaan, dat is een set!',False,(255,255,255)),(810,200))
-    #     elif not computer and moeilijkheid:
-    #         info ='Helaas, dat is geen set'
-            #WIN.blit(myfont.render('Helaas, dat is geen set',False,(255,255,255)),(810,200))
-    
-    ########
+
     WIN.blit(myfont.render('Timer: '+text, True, (255, 255, 255)), (820, 200))
     
     if info =='Helaas, dat is geen set' and int(text)>int(kopietijd)*0.75:
@@ -172,7 +162,7 @@ def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,c
         info=''
     elif int(text)>=tijd*0.75:
         WIN.blit(myfont.render(info, False, (255, 255, 255)), (820, 250))
-    ###########
+
     
     WIN.blit(myfont.render('Jouw score: '+str(punten),False,(255,255,255)),(820,300))
     WIN.blit(myfont.render('Computer score: '+str(compunten),False,(255,255,255)),(820,350))
@@ -189,7 +179,8 @@ def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,c
     plaatjes=[]
     for i in range(len(tafelkaarten)):
         plaatjes.append(pygame.image.load(tafelkaarten[i].plaatje()))
-    
+
+#kaarten op het scherm laten zien    
     WIN.blit(plaatjes[0], (10, 10))
     WIN.blit(plaatjes[1], (150,10))
     WIN.blit(plaatjes[2], (290,10))
@@ -202,7 +193,8 @@ def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,c
     WIN.blit(plaatjes[9], (430,250))
     WIN.blit(plaatjes[10], (570,250))
     WIN.blit(plaatjes[11], (710,250))
-    
+
+#getallen op het scherm laten zien    
     WIN.blit(nummers[0],(50,205))
     WIN.blit(nummers[1],(190,205))
     WIN.blit(nummers[2],(330,205))
@@ -215,17 +207,11 @@ def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,c
     WIN.blit(nummers[9],(470,450))
     WIN.blit(nummers[10],(610,450))
     WIN.blit(nummers[11],(750,450))
-    # else:
-    #     if punten >=10:
-    #         winnaar= 'Je hebt gewonnen!'
-            
-    #     else:
-    #         winnaar= 'De computer heeft gewonnen'
-    #     WIN.blit(myfont.render(winnaar,False,(255,255,255)),(400,200))
+
     pygame.display.update()
     
 
-  
+#hoofdprogramma  
 def main():
     moeilijkheid=False
     user_text=''
@@ -243,11 +229,11 @@ def main():
     eerstekeer=False
     computer=False
     maximum=10^6
-    ##########
-    
+ 
+ #belangrijk voor de timer   
     counter, text = tijd, str(tijd).rjust(3)
     pygame.time.set_timer(pygame.USEREVENT, 1000)
-    ############
+ 
     
     clock=pygame.time.Clock()
     run = True
@@ -305,7 +291,7 @@ def main():
                 else:
                     user_text+=event.unicode
                    
-                ######
+  #timer:
             if event.type == pygame.USEREVENT and moeilijkheid: 
                 counter -= 1
                 if counter >= 0:
@@ -330,8 +316,7 @@ def main():
                             computer=True
                         eerstekeer=True
                         
-                #text = str(counter).rjust(3) if counter > 0 else 'Je bent te langzaam'
-                #######
+                
         text_surface=myfont.render(user_text,True,(255,255,255))    
         draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,compunten,text,info,tijd,kopietijd,moeilijkheid,computer,maximum)
         
