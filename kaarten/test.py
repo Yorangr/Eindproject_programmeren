@@ -149,16 +149,18 @@ def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,c
     WIN.fill(POKERGREEN)
     WIN.blit(extrafont.render('(c) 2021 Tarik Tekeli en Yoran Grovenstein', False, (255,255,255)),(905,475))
     if moeilijkheid:
-        WIN.blit(extrafont.render('De eerste die '+str(maximum)+' punten heeft wint!', False, (255,255,255)),(820,400))
+        if maximum==1:
+            WIN.blit(extrafont.render('De eerste die 1 punt heeft wint!', False, (255,255,255)),(820,400))
+        else:
+            WIN.blit(extrafont.render('De eerste die '+str(maximum)+' punten heeft wint!', False, (255,255,255)),(820,400))
     
-    
-    if submit:
+    # if submit:
         
-        if kaart1.set(kaart2,kaart3) and int(kopietijd)!=0 and not computer and moeilijkheid:
-            info = 'Goed gedaan, dat is een set!'
-            #WIN.blit(myfont.render('Goed gedaan, dat is een set!',False,(255,255,255)),(810,200))
-        elif not computer and moeilijkheid:
-            info ='Helaas, dat is geen set'
+    #     if kaart1.set(kaart2,kaart3) and int(kopietijd)!=0 and not computer and moeilijkheid:
+    #         info = 'Goed gedaan, dat is een set!'
+    #         #WIN.blit(myfont.render('Goed gedaan, dat is een set!',False,(255,255,255)),(810,200))
+    #     elif not computer and moeilijkheid:
+    #         info ='Helaas, dat is geen set'
             #WIN.blit(myfont.render('Helaas, dat is geen set',False,(255,255,255)),(810,200))
     
     ########
@@ -290,6 +292,10 @@ def main():
                         kaart2=tafelkaarten[int(invoer[1])-1]
                         kaart3=tafelkaarten[int(invoer[2])-1]
                         
+                        if kaart1.set(kaart2,kaart3) and int(kopietijd)!=0 and not computer:
+                            info = 'Goed gedaan, dat is een set!'
+                        else:
+                            info ='Helaas, dat is geen set'
                         if tafelkaarten[int(invoer[0])-1].set(tafelkaarten[int(invoer[1])-1],tafelkaarten[int(invoer[2])-1]):
                             for i in range(3):
                                 tafelkaarten[int(invoer[i])-1]=nieuwekaart(stapel,tafelkaarten)                        
