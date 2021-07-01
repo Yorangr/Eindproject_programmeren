@@ -154,10 +154,10 @@ def draw_window(text_surface,invoer,submit,correct,kaart1,kaart2,kaart3,punten,c
     
     if submit:
         
-        if kaart1.set(kaart2,kaart3) and int(kopietijd)!=0 and not computer:
+        if kaart1.set(kaart2,kaart3) and int(kopietijd)!=0 and not computer and moeilijkheid:
             info = 'Goed gedaan, dat is een set!'
             #WIN.blit(myfont.render('Goed gedaan, dat is een set!',False,(255,255,255)),(810,200))
-        elif not computer:
+        elif not computer and moeilijkheid:
             info ='Helaas, dat is geen set'
             #WIN.blit(myfont.render('Helaas, dat is geen set',False,(255,255,255)),(810,200))
     
@@ -278,7 +278,7 @@ def main():
                         tijd = int(invoer[0])
                         maximum=int(invoer[1])
                         moeilijkheid=True
-                    
+                        
                     else:
                         submit=True
                         computer=False
